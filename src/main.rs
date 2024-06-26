@@ -3,6 +3,8 @@ use async_graphql::{http::GraphiQLSource, EmptyMutation, EmptySubscription, Obje
 use async_graphql_poem::*;
 use poem::{listener::TcpListener, web::Html, *};
 
+use std::net::{Ipv4Addr, SocketAddr};
+
 struct Query;
 
 #[Object]
@@ -19,14 +21,14 @@ async fn graphiql() -> impl IntoResponse {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // create the schema
     let schema = Schema::build(Query, EmptyMutation, EmptySubscription).finish();
 
-    // start the http server
+    let port: u16 = 55555;
+    let address: SocketAddr = (Ipv4Addr::LOCALHOST, port).into();
+    println!("GraphiQL: http://{address}");
+
     let app = Route::new().at("/", get(graphiql).post(GraphQL::new(schema)));
-    println!("GraphiQL: http://localhost:8000");
-    Server::new(TcpListener::bind("0.0.0.0:8000"))
-        .run(app)
-        .await?;
+
+    Server::new(TcpListener::bind(address)).run(app).await?;
     Ok(())
 }
