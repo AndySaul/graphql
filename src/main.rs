@@ -40,7 +40,8 @@ async fn main() -> Result<()> {
     info!("GraphiQL: http://{address}");
 
     let app = Route::new().at("/", get(graphiql).post(GraphQL::new(schema)));
+    let listener = TcpListener::bind(address);
 
-    Server::new(TcpListener::bind(address)).run(app).await?;
+    Server::new(listener).run(app).await?;
     Ok(())
 }
