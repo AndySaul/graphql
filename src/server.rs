@@ -1,8 +1,8 @@
 use anyhow::Result;
 use async_graphql::http::GraphiQLSource;
-use async_graphql_poem::*;
+use async_graphql_poem::GraphQL;
 use log::info;
-use poem::{listener::TcpListener, web::Html, *};
+use poem::{get, handler, listener::TcpListener, web::Html, IntoResponse, Route, Server};
 
 use super::schema;
 
