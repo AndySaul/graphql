@@ -16,9 +16,10 @@ async fn graphiql() -> impl IntoResponse {
 pub async fn run(port: u16) -> Result<()> {
     let address: SocketAddr = (Ipv4Addr::LOCALHOST, port).into();
     info!("GraphiQL: http://{address}");
-
-    let app = Route::new().at("/", get(graphiql).post(GraphQL::new(schema::new())));
     let listener = TcpListener::bind(address);
+
+    let endpoint = GraphQL::new(schema::new());
+    let app = Route::new().at("/", get(graphiql).post(endpoint));
 
     Server::new(listener).run(app).await?;
     Ok(())
