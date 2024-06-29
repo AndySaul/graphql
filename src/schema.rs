@@ -1,4 +1,5 @@
 use async_graphql::{EmptyMutation, EmptySubscription, Object, Schema};
+use async_graphql_poem::GraphQL;
 
 pub struct Query;
 
@@ -9,6 +10,6 @@ impl Query {
     }
 }
 
-pub fn new() -> Schema<Query, EmptyMutation, EmptySubscription> {
-    Schema::build(Query, EmptyMutation, EmptySubscription).finish()
+pub fn new() -> GraphQL<Schema<Query, EmptyMutation, EmptySubscription>> {
+    GraphQL::new(Schema::build(Query, EmptyMutation, EmptySubscription).finish())
 }
