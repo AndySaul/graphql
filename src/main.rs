@@ -1,5 +1,5 @@
-use anyhow::Result;
 use clap::Parser;
+use log::error;
 
 use graphql::logger;
 use graphql::server;
@@ -13,12 +13,12 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() {
     logger::init();
 
     let args = Args::parse();
 
-    server::run(args.port).await?;
-
-    Ok(())
+    if let Err(e) = server::run(args.port).await {
+        error!("{e}");
+    }
 }
