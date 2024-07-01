@@ -8,10 +8,13 @@ use super::schema;
 use std::net::{Ipv4Addr, SocketAddr};
 
 #[handler]
-async fn graphiql() -> impl IntoResponse {
+fn graphiql() -> impl IntoResponse {
     Html(GraphiQLSource::build().finish())
 }
 
+/// # Errors
+///
+/// Propagates errors from poem server
 pub async fn run(port: u16) -> Result<()> {
     let address: SocketAddr = (Ipv4Addr::LOCALHOST, port).into();
     info!("GraphiQL: http://{address}");

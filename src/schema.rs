@@ -5,11 +5,13 @@ pub struct Query;
 
 #[Object]
 impl Query {
+    #[allow(clippy::unused_async)]
     async fn hello(&self) -> &'static str {
         "world"
     }
 }
 
+#[must_use]
 pub fn new() -> GraphQL<Schema<Query, EmptyMutation, EmptySubscription>> {
     GraphQL::new(Schema::build(Query, EmptyMutation, EmptySubscription).finish())
 }
