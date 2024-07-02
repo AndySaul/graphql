@@ -11,6 +11,7 @@ impl Query {
     }
 }
 
+/// Creates a new GraphQL endpoint for poem server
 #[must_use]
 pub fn new() -> GraphQL<Schema<Query, EmptyMutation, EmptySubscription>> {
     GraphQL::new(Schema::build(Query, EmptyMutation, EmptySubscription).finish())

@@ -12,6 +12,8 @@ fn graphiql() -> impl IntoResponse {
     Html(GraphiQLSource::build().finish())
 }
 
+/// Creates and runs a GraphQL server on the given port
+///
 /// # Errors
 ///
 /// Propagates errors from poem server
