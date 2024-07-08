@@ -1,5 +1,5 @@
 use anyhow::{bail, Result};
-use async_graphql::{Context, EmptyMutation, EmptySubscription, Object, Schema};
+use async_graphql::{Context, EmptySubscription, Object, Schema};
 use async_graphql_poem::GraphQL;
 use tokio::sync::RwLock;
 
@@ -22,12 +22,28 @@ impl Query {
     }
 }
 
+pub struct Mutation;
+
+#[Object]
+impl Mutation {
+    /// Sets a new value
+    async fn set_value(&self, context: &Context<'_>, value: i32) -> Result<bool> {
+        match context.data::<RwLock<i32>>() {
+            Ok(lock) => {
+                *lock.write().await = value;
+                Ok(true)
+            }
+            Err(e) => bail!("Cannot get GraphQL context: {e:?}"),
+        }
+    }
+}
+
 /// Creates a new GraphQL endpoint for poem server
 #[must_use]
-pub fn new() -> GraphQL<Schema<Query, EmptyMutation, EmptySubscription>> {
+pub fn new() -> GraphQL<Schema<Query, Mutation, EmptySubscription>> {
     let value = RwLock::new(42);
     GraphQL::new(
-        Schema::build(Query, EmptyMutation, EmptySubscription)
+        Schema::build(Query, Mutation, EmptySubscription)
             .data(value)
             .finish(),
     )
