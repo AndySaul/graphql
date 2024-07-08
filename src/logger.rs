@@ -2,7 +2,7 @@ use env_logger::Env;
 
 /// Initialises log settings
 ///
-/// Defaults to "info" if GRAPHQL_APP_LOG_LEVEL not set
+/// Defaults to "info" if ```GRAPHQL_APP_LOG_LEVEL``` not set
 pub fn init() {
     env_logger::init_from_env(
         Env::default()
