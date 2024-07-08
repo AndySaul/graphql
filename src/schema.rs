@@ -8,13 +8,15 @@ pub struct Query;
 #[Object]
 impl Query {
     #[allow(clippy::unused_async)]
+    /// Hello world example
     async fn hello(&self) -> &'static str {
         "world"
     }
 
+    /// Retrieves the mutable value
     async fn value(&self, context: &Context<'_>) -> Result<i32> {
         match context.data::<RwLock<i32>>() {
-            Ok(x) => Ok(*x.read().await),
+            Ok(lock) => Ok(*lock.read().await),
             Err(e) => bail!("Cannot get GraphQL context: {e:?}"),
         }
     }
