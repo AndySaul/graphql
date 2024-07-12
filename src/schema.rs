@@ -1,6 +1,5 @@
 use anyhow::Result;
 use async_graphql::{Context, EmptySubscription, Object, Schema};
-use async_graphql_poem::GraphQL;
 use tokio::sync::RwLock;
 
 type Val = RwLock<i32>;
@@ -35,11 +34,9 @@ impl Mutation {
 
 /// Creates a new GraphQL endpoint for poem server
 #[must_use]
-pub fn new() -> GraphQL<Schema<Query, Mutation, EmptySubscription>> {
+pub fn new() -> Schema<Query, Mutation, EmptySubscription> {
     let value = RwLock::new(42);
-    GraphQL::new(
-        Schema::build(Query, Mutation, EmptySubscription)
-            .data(value)
-            .finish(),
-    )
+    Schema::build(Query, Mutation, EmptySubscription)
+        .data(value)
+        .finish()
 }

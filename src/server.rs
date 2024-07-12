@@ -1,5 +1,6 @@
 use anyhow::Result;
 use async_graphql::http::GraphiQLSource;
+use async_graphql_poem::GraphQL;
 use log::info;
 use poem::{get, handler, listener::TcpListener, web::Html, IntoResponse, Route, Server};
 
@@ -22,7 +23,7 @@ pub async fn run(port: u16) -> Result<()> {
     info!("GraphiQL: http://{address}");
     let listener = TcpListener::bind(address);
 
-    let app = Route::new().at("/", get(graphiql).post(schema::new()));
+    let app = Route::new().at("/", get(graphiql).post(GraphQL::new(schema::new())));
 
     Server::new(listener).run(app).await?;
     Ok(())
