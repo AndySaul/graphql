@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::Result;
 use async_graphql::{Context, EmptySubscription, Object, Schema};
 use async_graphql_poem::GraphQL;
 use tokio::sync::RwLock;
@@ -15,10 +15,11 @@ impl Query {
 
     /// Retrieves the mutable value
     async fn value(&self, context: &Context<'_>) -> Result<i32> {
-        match context.data::<RwLock<i32>>() {
-            Ok(lock) => Ok(*lock.read().await),
-            Err(e) => bail!("Cannot get GraphQL context: {e:?}"),
-        }
+        Ok(*context
+            .data::<RwLock<i32>>()
+            .expect("RwLock<i32> is valid data type")
+            .read()
+            .await)
     }
 }
 
@@ -28,13 +29,12 @@ pub struct Mutation;
 impl Mutation {
     /// Sets a new value
     async fn set_value(&self, context: &Context<'_>, value: i32) -> Result<bool> {
-        match context.data::<RwLock<i32>>() {
-            Ok(lock) => {
-                *lock.write().await = value;
-                Ok(true)
-            }
-            Err(e) => bail!("Cannot get GraphQL context: {e:?}"),
-        }
+        *context
+            .data::<RwLock<i32>>()
+            .expect("RwLock<i32> is valid data type")
+            .write()
+            .await = value;
+        Ok(true)
     }
 }
 
